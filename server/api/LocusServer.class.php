@@ -35,12 +35,18 @@ class LocusServer {
 
 	protected function updateLocation(){
 		
-		if(!isset($_GET['user'], $_GET['lat'], $_GET['long'])){
+		if(!isset($_GET['user'], $_GET['lat'], $_GET['long'], $_GET['accuracy'])){
 			return;
 		}
 
-		$s = $this->conn->prepare('INSERT INTO locations SET `user`=?, `date`=NOW(), `lat`=?, `long`=?');
-		$s->bind_param('sdd', $_GET['user'], str_replace(',', '.', $_GET['lat']), str_replace(',', '.', $_GET['long']));
+		$s = $this->conn->prepare('INSERT INTO locations SET `user`=?, `date`=NOW(), `lat`=?, `long`=?, `accuracy`=?');
+		$s->bind_param(
+			'sddd',
+			$_GET['user'],
+			str_replace(',', '.', $_GET['lat']),
+			str_replace(',', '.', $_GET['long']),
+			str_replace(',', '.', $_GET['accuracy'])
+		);
 		if(!$s->execute()){
 			die('insert fail.');
 		}

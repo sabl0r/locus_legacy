@@ -21,7 +21,7 @@ class LocusFrontend {
 
 	protected function outputMap(){
 
-		$s = $this->conn->prepare('SELECT `user`, `date`, `lat`, `long` FROM (SELECT * FROM locations ORDER BY `date` DESC) AS tmp GROUP BY `user` ORDER BY `date` DESC');
+		$s = $this->conn->prepare('SELECT `user`, `date`, `lat`, `long` FROM (SELECT * FROM locations WHERE `date` > DATE_SUB(NOW(), INTERVAL 1 HOUR) ORDER BY `date` DESC) AS tmp GROUP BY `user` ORDER BY `date` DESC');
 		$s->execute();
 		$s->bind_result($user, $date, $lat, $long);
 
