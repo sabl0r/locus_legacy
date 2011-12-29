@@ -1,0 +1,9 @@
+locus Android Developer Documentation
+=====================================
+
+Resources
+---------
+
+ * http://developer.android.com/sdk/installing.html
+ * http://developer.android.com/guide/index.html
+ * http://developer.android.com/reference/packages.html
