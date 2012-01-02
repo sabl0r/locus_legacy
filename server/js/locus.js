@@ -12,7 +12,7 @@ $.extend(de.weizenbaron.Locus, {
 				other_params: "sensor=false&language=de",
 				language: "de",
 				callback: function(){
-					de.weizenbaron.Locus._loadJs("js/markermanager.js", $.proxy(function(){
+					de.weizenbaron.Locus._loadJs(['js/markermanager.js','js/markerwithlabel.js'], $.proxy(function(){
 						
 						var map = $('#' + container_id).gmap({
 							center: { lat: 0, lng: 0 }
@@ -21,13 +21,19 @@ $.extend(de.weizenbaron.Locus, {
 
 						var open = [];
 						$.each(users, function(){
-							map.addMarker(
+							var m = map.addMarker(
 								this.lat + ',' + this.long,
 								'<div class="gwindow">' + this.user + '<br />' + this.date + ' Uhr</div>',
-								 {}, {});
+								this.user,
+								{}, {});
+							
+							map.addCircle(
+								m,
+								this.accuracy / 2
+								);
 						});
 
-						map.initMarkers();
+						map.initMarkers(16);
 						map.showInfoWindows(open);
 
 					}, de.weizenbaron.Locus));

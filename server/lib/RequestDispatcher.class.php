@@ -5,7 +5,7 @@ class RequestDispatcher {
 	public function __construct(){
 		
 		$url = $_SERVER['REQUEST_URI'];
-		if(!preg_match('#'.BASE_URI.'([a-z]*)(/(.*))?#i', $url, $matches)){
+		if(!preg_match('#'.BASE_URI.'/?([a-z]*)(/(.*))?#i', $url, $matches)){
 			return;
 		}
 

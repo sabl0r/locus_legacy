@@ -21,13 +21,13 @@ class LocusFrontend {
 
 	protected function outputMap(){
 
-		$s = $this->conn->prepare('SELECT `user`, `date`, `lat`, `long` FROM (SELECT * FROM locations WHERE `date` > DATE_SUB(NOW(), INTERVAL 1 HOUR) ORDER BY `date` DESC) AS tmp GROUP BY `user` ORDER BY `date` DESC');
+		$s = $this->conn->prepare('SELECT `user`, `date`, `lat`, `long`, `accuracy` FROM (SELECT * FROM locations WHERE `date` > DATE_SUB(NOW(), INTERVAL 1 HOUR) ORDER BY `date` DESC) AS tmp GROUP BY `user` ORDER BY `date` DESC');
 		$s->execute();
-		$s->bind_result($user, $date, $lat, $long);
+		$s->bind_result($user, $date, $lat, $long, $accuracy);
 
 		$users = array();
 		while($s->fetch()){
-			$users[] = array('user' => $user, 'date' => strftime('%d.%m.%Y<br />%H:%M', strtotime($date)), 'lat' => $lat, 'long' => $long);
+			$users[] = array('user' => $user, 'date' => strftime('%d.%m.%Y<br />%H:%M', strtotime($date)), 'lat' => $lat, 'long' => $long, 'accuracy' => $accuracy);
 		}
 
 		?>
@@ -51,7 +51,8 @@ class LocusFrontend {
 				<div id="page">
 					<div id="map"></div>
 
-					<div id="requests">
+					<div id="footer">
+						<a href="http://files.inrain.org/pub/pmap/locus-current.apk">Download App</a>
 						<a href="http://wiki.inrain.org/28C3/Map">Feature requests</a>
 					</div>
 				</div>

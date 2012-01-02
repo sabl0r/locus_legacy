@@ -122,7 +122,7 @@ $.Class.extend('de.weizenbaron.Locus.Map', {}, {
 	 *                        http://code.google.com/intl/de-DE/apis/maps/documentation/javascript/reference.html#Marker
 	 * @return {google.maps.Marker}
 	 */
-	addMarker: function(latlng, info, options, events){
+	addMarker: function(latlng, info, label, options, events){
 
 		if(typeof(latlng) === 'string'){
 			latlng = {
@@ -131,8 +131,10 @@ $.Class.extend('de.weizenbaron.Locus.Map', {}, {
 			}
 		}
 
-		var marker = new google.maps.Marker($.extend({
-			position: new google.maps.LatLng(latlng.lat, latlng.lng)
+		var marker = new MarkerWithLabel($.extend({
+			position: new google.maps.LatLng(latlng.lat, latlng.lng),
+			labelContent: label,
+		    	labelClass: 'marker_label'
 		}, options || {}));
 
 		marker.infoWindow = new google.maps.InfoWindow({
@@ -168,16 +170,31 @@ $.Class.extend('de.weizenbaron.Locus.Map', {}, {
 	/**
 	 * Fügt alle Marker des MarkerManagers der Karte hinzu
 	 */
-	initMarkers: function(){
+	initMarkers: function(maxZoom){
 
 		google.maps.event.addListener(this._markerManager, 'loaded', $.proxy(function(){
 			this._markerManager.addMarkers(this._markers, 1, 17);
 			this._markerManager.refresh();
 			if(this._markers.length > 1){
-				this.fitMap();
+				this.fitMap(null, maxZoom);
 			}
 		}, this));
 
+	},
+
+	addCircle: function(marker, radius){
+		
+		var circle = new google.maps.Circle({
+			map: this._map,
+			radius: radius,
+			fillColor: '#0000FF',
+			fillOpacity: 0.1,
+			strokeColor: '#0000FF',
+			strokeOpacity: 0.8,
+			strokeWeight: 2
+		});
+		circle.bindTo('center', marker, 'position');
+		
 	},
 	
 	/**
@@ -207,8 +224,9 @@ $.Class.extend('de.weizenbaron.Locus.Map', {}, {
 	 * @param {Object} markers Die Punkte, die berücksichtigt werden sollen
 	 *                         (optional). Wird der Parameter weggelassen,
 	 *                         werden die Marker der aktuellen Karte verwendet.
+	 *                 maxZoom Maximaler Zoom
 	 */
-	fitMap: function(markers){
+	fitMap: function(markers, maxZoom){
 
 		markers = markers || this._markers;
 		var bounds = new google.maps.LatLngBounds();
@@ -216,6 +234,12 @@ $.Class.extend('de.weizenbaron.Locus.Map', {}, {
 			bounds.extend(this.getPosition());
 		})
 		this._map.fitBounds(bounds);
+	
+		if(this._map.getZoom() > maxZoom){
+			this._map.setOptions({
+				zoom: maxZoom
+			});
+		}
 
 	},
 
