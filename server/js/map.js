@@ -175,9 +175,16 @@ $.Class.extend('de.weizenbaron.Locus.Map', {}, {
 		google.maps.event.addListener(this._markerManager, 'loaded', $.proxy(function(){
 			this._markerManager.addMarkers(this._markers, 1, 17);
 			this._markerManager.refresh();
-			if(this._markers.length > 1){
+
+			if(this._markers.length < 1){
+				this._map.setZoom(3);
+			} else if(this._markers.length == 1){
+				this._map.setCenter(this._markers[0].getPosition())
+				this._map.setZoom(16);
+			} else {
 				this.fitMap(null, maxZoom);
 			}
+
 		}, this));
 
 	},
