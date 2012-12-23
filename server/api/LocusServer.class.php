@@ -26,7 +26,7 @@ class LocusServer {
 		}
 
 		switch($matches[1]){
-			case 'update':
+			case 'location':
 				$this->updateLocation();
 				break;
 		}
@@ -34,18 +34,19 @@ class LocusServer {
 	}
 
 	protected function updateLocation(){
-		
-		if(!isset($_GET['user'], $_GET['lat'], $_GET['long'], $_GET['accuracy'])){
+
+		if(!isset($_POST['username'], $_POST['latitude'], $_POST['longitude'], $_POST['accuracy'], $_POST['provider'])){
 			return;
 		}
 
-		$s = $this->conn->prepare('INSERT INTO locations SET `user`=?, `date`=NOW(), `lat`=?, `long`=?, `accuracy`=?');
+		$s = $this->conn->prepare('INSERT INTO locations SET `user`=?, `date`=NOW(), `lat`=?, `long`=?, `accuracy`=?, `provider`=?');
 		$s->bind_param(
-			'sddd',
-			$_GET['user'],
-			str_replace(',', '.', $_GET['lat']),
-			str_replace(',', '.', $_GET['long']),
-			str_replace(',', '.', $_GET['accuracy'])
+			'sddds',
+			$_POST['username'],
+			str_replace(',', '.', $_POST['latitude']),
+			str_replace(',', '.', $_POST['longitude']),
+			str_replace(',', '.', $_POST['accuracy']),
+			$_POST['provider']
 		);
 		if(!$s->execute()){
 			die('insert fail.');
