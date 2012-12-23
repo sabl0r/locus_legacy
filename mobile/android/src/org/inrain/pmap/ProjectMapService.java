@@ -115,7 +115,8 @@ public class ProjectMapService extends Service {
         HttpClient client = new DefaultHttpClient();
         HttpGet request = new HttpGet();
         try {
-            URI uri = new URI(String.format("%s?user=%s&lat=%f&long=%f", serverUrl, user, location.getLatitude(), location.getLongitude()));
+            String url = String.format("%s?user=%s&lat=%f&long=%f&accuracy=%f", serverUrl, user, location.getLatitude(), location.getLongitude(), location.getAccuracy());
+            URI uri = new URI(url);
             counter++;
             ProjectMapActivity.debug(this, counter + " " + uri.toString());
 			request.setURI(uri);
