@@ -29,7 +29,7 @@ $.extend(de.weizenbaron.Locus, {
 							
 							map.addCircle(
 								m,
-								this.accuracy / 2
+								this.accuracy
 								);
 						});
 
