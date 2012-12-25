@@ -4,6 +4,13 @@ locus Android Developer Documentation
 Resources
 ---------
 
- * http://developer.android.com/sdk/installing.html
- * http://developer.android.com/guide/index.html
+For general information on how to develop code for android, see:
+
+ * https://developer.android.com/guide/components/index.html
  * http://developer.android.com/reference/packages.html
+
+Development Environment
+-----------------------
+
+To setup your development environment, follow:
+http://developer.android.com/sdk/installing.html

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
 
+<resources>
     <string name="hello">Hello World, ProjectMapActivity!</string>
-    <string name="app_name">ProjectMap</string>
+    <string name="app_name">locus</string>
     <string name="saveButton">Save</string>
     <string name="userLabel">User</string>
     <string name="serverLabel">Server URL</string>
-    <string name="ongoingNotification">ProjectMap</string>
+    <string name="ongoingNotification">locus</string>
     <string name="mapButton">Show Map</string>
     <string name="serviceLabel">Service:</string>
     <string name="mapLabel">Map:</string>
-
+    <string name="updateTickLabel">Update Tick [s]</string>
 </resources>
