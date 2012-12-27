@@ -14,7 +14,7 @@ set_include_path(PATH.PATH_SEPARATOR.get_include_path());
 require_once 'config.inc.php';
 
 // setup autoload cache
-require_once 'lib/ACload.class.php';
+require_once 'lib/ACLoad.class.php';
 ACLoad::generate(array(PATH.'lib', PATH.'api', PATH.'frontend'), PATH.'var/autoload.php');
 require_once 'var/autoload.php';
 
