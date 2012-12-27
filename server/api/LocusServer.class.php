@@ -24,8 +24,22 @@ class LocusServer {
 		if(!preg_match('#([a-z]+)/#i', REQUEST_URI, $matches)){
 			return;
 		}
+		
+		$call = $matches[1];
+		$method = strtolower($_SERVER['REQUEST_METHOD']);
 
-		switch($matches[1]){
+		// GET requests
+		if($method == 'get'){
+			
+			switch($call){
+			}
+			
+			return;
+			
+		}
+		
+		// POST requests
+		switch($call){
 			case 'location':
 				$this->updateLocation();
 				break;

@@ -1,6 +1,7 @@
 <?php
 
-require_once 'api/LocusServer.class.php';
+if(!defined('REQUEST_URI')){
+	return;
+}
 
 $server = new LocusServer();
-

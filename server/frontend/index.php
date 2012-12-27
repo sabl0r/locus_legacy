@@ -1,6 +1,7 @@
 <?php
 
-require 'frontend/LocusFrontend.class.php';
+if(!defined('REQUEST_URI')){
+	return;
+}
 
 $frontend = new LocusFrontend();
-

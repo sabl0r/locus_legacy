@@ -4,12 +4,11 @@ class RequestDispatcher {
 
 	public function __construct(){
 		
-		$url = $_SERVER['REQUEST_URI'];
-		if(!preg_match('#'.BASE_URI.'/?([a-z]*)(/(.*))?#i', $url, $matches)){
+		if(!preg_match('#'.BASE_URI.'/?([a-z]+)/(.+)#i', $_SERVER['REQUEST_URI'], $matches)){
 			return;
 		}
 
-		define('REQUEST_URI', $matches[3]);
+		define('REQUEST_URI', $matches[2]);
 
 		switch($matches[1]){
 			case 'api':
