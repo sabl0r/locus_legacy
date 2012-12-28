@@ -58,7 +58,11 @@ class LocusServer {
 		
 		$accessPoints = array();
 		if(isset($_POST['accesspoints'])){
-			$accessPoints = json_decode($_POST['accesspoints'], true);
+			
+			// Quick'n'Dirty fix for old locus app versions
+			$accessPoints = str_replace(array('id', 'l'), array('"id"', '"l"'), $_POST['accesspoints']);
+			
+			$accessPoints = json_decode($accessPoints, true);
 			if(json_last_error() > 0){
 				Ajax::sendError('Got invalid access points. wrong format.');
 			}
