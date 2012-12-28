@@ -58,8 +58,12 @@ abstract class Ajax {
 			
 			header('Content-Type: text/plain', true, 500);
 		}
-		echo $error instanceof Exception ? (DEBUG ? $error : $error->getMessage()) : $error;
-				
+		
+		$msg = $error instanceof Exception ? (DEBUG ? $error : $error->getMessage()) : $error;
+		
+		Logger::log($msg, Logger::ERROR);
+		echo $msg;
+		
 		exit();
 	}
 	

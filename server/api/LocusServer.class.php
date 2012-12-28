@@ -83,7 +83,7 @@ class LocusServer {
 			Ajax::sendError('Error while saving location into the database.');
 		}
 		
-		Logger::log($_POST);
+		Logger::log($_POST, Logger::DEBUG);
 
 	}
 	
