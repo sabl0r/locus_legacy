@@ -32,6 +32,9 @@ class LocusServer {
 		if($method == 'get'){
 			
 			switch($call){
+				case 'friends':
+					$this->getFriends();
+					break;
 			}
 			
 			return;
@@ -66,6 +69,12 @@ class LocusServer {
 			die('insert fail.');
 		}
 
+	}
+	
+	protected function getFriends(){
+		
+		Ajax::sendData(Locus::getFriends(), true);
+		
 	}
 
 }
