@@ -23,7 +23,7 @@ class Logger {
 		}
 		
 		if(is_array($value) || is_object($value)){
-			$value = substr(var_export($value, true), 1, -1);
+			$value = var_export($value, true);
 		}
 		
 		file_put_contents(PATH.'var/'.$filename, '['.  strftime('%d.%m.%Y %H:%M').'] '.$value."\n", FILE_APPEND);
