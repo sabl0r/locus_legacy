@@ -95,6 +95,7 @@ class LocusServer {
 		
 		$s = $this->conn->prepare('SELECT name, aps FROM poi');
 		$s->execute();
+		$s->store_result();
 		$s->bind_result($name, $aps);
 		
 		$count = 0;
@@ -122,6 +123,8 @@ class LocusServer {
 			}
 			
 		}
+		
+		$s->close();
 		
 		return $poi;
 		

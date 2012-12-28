@@ -14,6 +14,7 @@ class Locus {
 			FROM (SELECT * FROM locations WHERE `date` > DATE_SUB(NOW(), INTERVAL '.$age.' MINUTE) ORDER BY `date` DESC) AS tmp
 			GROUP BY `user`');
 		$s->execute();
+		$s->store_result();
 		$s->bind_result($user, $date, $lat, $long, $accuracy, $provider, $poi);
 
 		$users = array();
@@ -28,6 +29,8 @@ class Locus {
 				'poi' => $poi
 				);
 		}		
+		
+		$conn->close();
 		
 		return $users;
 		
