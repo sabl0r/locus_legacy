@@ -6,15 +6,15 @@ class Locus {
 		
 		$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 		if($conn->connect_error){
-			die('connection failed.');
+			Ajax::sendError('Could not connect to the database.');
 		}		
 		
 		$s = $conn->prepare('
-			SELECT `user`, `date`, `lat`, `long`, `accuracy`, `provider`
+			SELECT `user`, `date`, `lat`, `long`, `accuracy`, `provider`, `poi`
 			FROM (SELECT * FROM locations WHERE `date` > DATE_SUB(NOW(), INTERVAL '.$age.' MINUTE) ORDER BY `date` DESC) AS tmp
 			GROUP BY `user`');
 		$s->execute();
-		$s->bind_result($user, $date, $lat, $long, $accuracy, $provider);
+		$s->bind_result($user, $date, $lat, $long, $accuracy, $provider, $poi);
 
 		$users = array();
 		while($s->fetch()){
@@ -24,7 +24,8 @@ class Locus {
 				'latitude' => $lat,
 				'longitude' => $long,
 				'accuracy' => $accuracy,
-				'provider' => $provider
+				'provider' => $provider,
+				'poi' => $poi
 				);
 		}		
 		
