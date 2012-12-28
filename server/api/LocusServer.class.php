@@ -65,9 +65,12 @@ class LocusServer {
 			str_replace(',', '.', $_POST['accuracy']),
 			$_POST['provider']
 		);
+		
 		if(!$s->execute()){
 			die('insert fail.');
 		}
+		
+		Logger::log($_POST);
 
 	}
 	
