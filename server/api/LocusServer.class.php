@@ -16,13 +16,15 @@ class LocusServer {
 	}
 
 	public function __destruct(){
-		$this->conn->close();
+		if($this->conn){
+			$this->conn->close();
+		}
 	}
 
 	protected function handleRequest(){
 
 		if(!preg_match('#([a-z]+)/#i', REQUEST_URI, $matches)){
-			Ajax::sendError('Invalid request URL.');
+			Ajax::sendError('Invalid request URL.', 404);
 		}
 		
 		$call = $matches[1];
@@ -35,6 +37,8 @@ class LocusServer {
 				case 'friends':
 					$this->getFriends();
 					break;
+				default:
+					Ajax::sendError('Invalid API call.', 404);
 			}
 			
 			return;
@@ -46,25 +50,28 @@ class LocusServer {
 			case 'location':
 				$this->updateLocation();
 				break;
+			case 'pois':
+				$this->addPOI();
+				break;
+			default:
+				Ajax::sendError('Invalid API call.', 404);
 		}
 
 	}
 
 	protected function updateLocation(){
+		
+		Logger::log($_POST, Logger::DEBUG);
 
 		if(!isset($_POST['username'], $_POST['latitude'], $_POST['longitude'], $_POST['accuracy'], $_POST['provider'])){
-			Ajax::sendError('Invalid POST data.');
+			Ajax::sendError('Invalid POST data.', 400);
 		}
 		
 		$accessPoints = array();
 		if(isset($_POST['accesspoints'])){
-			
-			// Quick'n'Dirty fix for old locus app versions
-			$accessPoints = str_replace(array('id', 'l'), array('"id"', '"l"'), $_POST['accesspoints']);
-			
-			$accessPoints = json_decode($accessPoints, true);
+			$accessPoints = json_decode($_POST['accesspoints'], true);
 			if(json_last_error() > 0){
-				Ajax::sendError('Got invalid access points. wrong format.');
+				Ajax::sendError('Got invalid access points. Wrong format.', 400);
 			}
 		}
 
@@ -82,8 +89,6 @@ class LocusServer {
 		if(!$s->execute()){
 			Ajax::sendError('Error while saving location into the database.');
 		}
-		
-		Logger::log($_POST, Logger::DEBUG);
 
 	}
 	
@@ -134,6 +139,63 @@ class LocusServer {
 	protected function getFriends(){
 		
 		Ajax::sendData(Locus::getFriends(), true);
+		
+	}
+	
+	protected function addPOI(){
+		
+		Logger::log($_POST, Logger::DEBUG);
+		
+		if(!isset($_POST['username'], $_POST['name'], $_POST['accesspoints'])){
+			Ajax::sendError('Invalid POST data.', 400);
+		}
+		
+		$accessPoints = json_decode($_POST['accesspoints'], true);
+		if(json_last_error() > 0){
+			Ajax::sendError('Got invalid access points. Wrong format.', 400);
+		}
+		
+		$s = $this->conn->prepare('
+			SELECT aps
+			FROM poi
+			WHERE name=?');
+		$s->bind_param('s', $_POST['name']);
+		$s->execute();
+		$s->store_result();
+		
+		$aps = array();
+		if($s->num_rows() > 0){
+			$s->bind_result($old_aps);
+			$s->fetch();
+			foreach(json_decode($old_aps, true) as $a){
+				$aps[$a['id']] = $a;
+			}
+		}
+		$s->close();
+
+		foreach($accessPoints as $a){
+			if(isset($aps[$a['id']])){
+				$aps[$a['id']]['count']++;
+			} else {
+				$aps[$a['id']] = array(
+					'id' => $a['id'],
+					'count' => 1
+				);
+			}
+		}
+		
+		$name = strtolower($_POST['name']);
+		$aps = json_encode(array_values($aps));
+		$s = $this->conn->prepare('REPLACE INTO poi SET name=?, aps=?');
+		$s->bind_param(
+			'ss',
+			$name,
+			$aps
+		);
+
+		if(!$s->execute()){
+			Ajax::sendError('Error while saving POI into the database.');
+		}	
 		
 	}
 

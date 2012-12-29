@@ -44,7 +44,7 @@ abstract class Ajax {
 	 *
 	 * @param string $error
 	 */
-	public static function sendError($error=''){
+	public static function sendError($error='', $code=500){
 		if(ob_get_length()){
 			ob_end_clean();
 		}
@@ -56,7 +56,7 @@ abstract class Ajax {
 				header('Content-Encoding: identify');
 			}
 			
-			header('Content-Type: text/plain', true, 500);
+			header('Content-Type: text/plain', true, $code);
 		}
 		
 		$msg = $error instanceof Exception ? (DEBUG ? $error : $error->getMessage()) : $error;
