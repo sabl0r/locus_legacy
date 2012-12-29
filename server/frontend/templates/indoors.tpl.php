@@ -39,11 +39,11 @@
 					
 				</div>
 			</div>
-
-			<div id="footer" class="bar">
-				<a href="http://files.inrain.org/pub/pmap/locus-current.apk">Download App</a>
-				<a href="http://wiki.inrain.org/28C3/Map">Feature requests</a>
-			</div>
+		</div>
+		
+		<div id="footer" class="bar">
+			<a href="http://files.inrain.org/pub/pmap/locus-current.apk">Download App</a>
+			<a href="http://wiki.inrain.org/28C3/Map">Feature requests</a>
 		</div>
 	</body>
 </html>
