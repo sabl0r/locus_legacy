@@ -156,7 +156,7 @@ class LocusServer {
 		}
 		
 		$s = $this->conn->prepare('
-			SELECT aps
+			SELECT aps, author
 			FROM poi
 			WHERE name=?');
 		$s->bind_param('s', $_POST['name']);
@@ -165,7 +165,7 @@ class LocusServer {
 		
 		$aps = array();
 		if($s->num_rows() > 0){
-			$s->bind_result($old_aps);
+			$s->bind_result($old_aps, $author);
 			$s->fetch();
 			foreach(json_decode($old_aps, true) as $a){
 				$aps[$a['id']] = $a;
@@ -186,11 +186,15 @@ class LocusServer {
 		
 		$name = strtolower($_POST['name']);
 		$aps = json_encode(array_values($aps));
-		$s = $this->conn->prepare('REPLACE INTO poi SET name=?, aps=?');
+		if(!isset($author)){
+			$author = $_POST['username'];
+		}
+		$s = $this->conn->prepare('REPLACE INTO poi SET name=?, aps=?, author=?');
 		$s->bind_param(
-			'ss',
+			'sss',
 			$name,
-			$aps
+			$aps,
+			$author
 		);
 
 		if(!$s->execute()){
