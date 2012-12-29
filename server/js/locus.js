@@ -21,10 +21,13 @@ $.extend(de.weizenbaron.Locus, {
 
 						var open = [];
 						$.each(users, function(){
+							var datetime = this.date.split(' ');
+							var date = datetime[0].split('-');
+							var time = datetime[1].substr(0, 5);
 							var m = map.addMarker(
-								this.lat + ',' + this.long,
-								'<div class="gwindow">' + this.user + '<br />' + this.date + ' Uhr</div>',
-								this.user,
+								this.latitude + ',' + this.longitude,
+								'<div class="gwindow">' + this.username + '<br />' + date[2] + '.' + (date[1] - 1) + '.' + date[0] + ' ' + time + ' Uhr</div>',
+								this.username,
 								{}, {});
 							
 							map.addCircle(

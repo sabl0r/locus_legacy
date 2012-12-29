@@ -1,5 +1,7 @@
 <?php
 
+define('DEBUG', false);
+
 define('BASE_URI', 'locus/');
 
 define('DB_HOST', 'localhost');

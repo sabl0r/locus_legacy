@@ -24,8 +24,25 @@ class LocusServer {
 		if(!preg_match('#([a-z]+)/#i', REQUEST_URI, $matches)){
 			return;
 		}
+		
+		$call = $matches[1];
+		$method = strtolower($_SERVER['REQUEST_METHOD']);
 
-		switch($matches[1]){
+		// GET requests
+		if($method == 'get'){
+			
+			switch($call){
+				case 'friends':
+					$this->getFriends();
+					break;
+			}
+			
+			return;
+			
+		}
+		
+		// POST requests
+		switch($call){
 			case 'location':
 				$this->updateLocation();
 				break;
@@ -48,10 +65,19 @@ class LocusServer {
 			str_replace(',', '.', $_POST['accuracy']),
 			$_POST['provider']
 		);
+		
 		if(!$s->execute()){
 			die('insert fail.');
 		}
+		
+		Logger::log($_POST);
 
+	}
+	
+	protected function getFriends(){
+		
+		Ajax::sendData(Locus::getFriends(), true);
+		
 	}
 
 }

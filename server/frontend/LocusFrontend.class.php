@@ -6,29 +6,13 @@ class LocusFrontend {
 
 	public function __construct(){
 
-		$this->conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-		if($this->conn->connect_error){
-			die('connection failed.');
-		}
-
 		$this->outputMap();
 
 	}
 
-	public function __destruct(){
-		$this->conn->close();
-	}
-
 	protected function outputMap(){
 
-		$s = $this->conn->prepare('SELECT `user`, `date`, `lat`, `long`, `accuracy` FROM (SELECT * FROM locations WHERE `date` > DATE_SUB(NOW(), INTERVAL 1 HOUR) ORDER BY `date` DESC) AS tmp GROUP BY `user` ORDER BY `date` DESC');
-		$s->execute();
-		$s->bind_result($user, $date, $lat, $long, $accuracy);
-
-		$users = array();
-		while($s->fetch()){
-			$users[] = array('user' => $user, 'date' => strftime('%d.%m.%Y<br />%H:%M', strtotime($date)), 'lat' => $lat, 'long' => $long, 'accuracy' => $accuracy);
-		}
+		$users = Locus::getFriends();
 
 		?>
 		<!DOCTYPE>
