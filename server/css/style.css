@@ -46,18 +46,21 @@ div.bar {
 	z-index: 2;
 	text-align: center;
 	border: 1px solid #333;
+	overflow: hidden;
 }
 
 div.bar a {
 	text-decoration: none;
 	font-size: 24px;
 	color: #333;
+	display: block;
+	float: left;
+	text-align: center;
+	padding: 0 10px;
 }
 
 div.bar a:first-child {
-	margin-right: 10px;
 	border-right: 1px solid #333;
-	padding-right: 10px;
 }
 
 #topbar {
@@ -66,22 +69,30 @@ div.bar a:first-child {
 	left: 50%;
 	margin-left: -110px;
 	height: 30px;
-	width: 220px;
+	width: 241px;
 	border-top: 0;
+}
+
+#topbar a {
+	width: 100px;
 }
 
 #footer {
 	position: relative;
 	left: 50%;
-	margin-left: -170px;
+	margin-left: -110px;
 	height: 30px;
-	width: 340px;
+	width: 241px;
 	margin-top: -31px;
 	border-bottom: 0;
 }
 
+#footer a {
+	width: 100px;
+}
+
 #indoors {
-	padding: 40px 0 0 20px;
+	padding: 60px 0 0 20px;
 }
 
 /* POIs */

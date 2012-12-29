@@ -26,8 +26,8 @@
 		</div>
 		
 		<div id="footer" class="bar">
-			<a href="http://files.inrain.org/pub/pmap/locus-current.apk">Download App</a>
-			<a href="http://wiki.inrain.org/28C3/Map">Feature requests</a>
+			<a href="http://files.inrain.org/pub/pmap/locus-current.apk">App</a>
+			<a href="http://wiki.inrain.org/28C3/Map">Request?</a>
 		</div>		
 
 		<script>
