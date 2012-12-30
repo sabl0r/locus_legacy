@@ -117,7 +117,16 @@ ul.poi li {
 	margin-left: 20px;
 }
 
+ul.poi span.username {
+	font-weight: bold;
+}
+
+ul.poi span.age {
+	font-size: 14px;
+	color: #999;
+}
+
 div.no_users {
 	margin-bottom: 30px;
-	font-size: 18px;
+	font-size: 16px;
 }

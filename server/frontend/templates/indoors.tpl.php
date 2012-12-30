@@ -43,7 +43,11 @@
 					if(!empty($l['users'])){
 						echo '<ul class="poi">';
 						foreach($l['users'] as $u){
-							echo '<li>'.String::sanitize($u['username']).'</li>';
+							echo '
+								<li>
+									<span class="username">'.String::sanitize($u['username']).'</span>
+									<span class="age">'.$u['age'].' min</span>
+								</li>';
 						}
 						echo '</ul>';
 					} else {

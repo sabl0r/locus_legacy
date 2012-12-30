@@ -10,12 +10,12 @@ class Locus {
 		}		
 		
 		$s = $conn->prepare('
-			SELECT `user`, `date`, `lat`, `long`, `accuracy`, `provider`, `poi`
+			SELECT `user`, `date`, `lat`, `long`, `accuracy`, `provider`, `poi`, MINUTE(TIMEDIFF(NOW(), `date`)) AS age
 			FROM (SELECT * FROM locations WHERE `date` > DATE_SUB(NOW(), INTERVAL '.$age.' MINUTE) ORDER BY `date` DESC) AS tmp
 			GROUP BY `user`');
 		$s->execute();
 		$s->store_result();
-		$s->bind_result($user, $date, $lat, $long, $accuracy, $provider, $poi);
+		$s->bind_result($user, $date, $lat, $long, $accuracy, $provider, $poi, $age);
 
 		$users = array();
 		while($s->fetch()){
@@ -26,7 +26,8 @@ class Locus {
 				'longitude' => $long,
 				'accuracy' => $accuracy,
 				'provider' => $provider,
-				'poi' => $poi
+				'poi' => $poi,
+				'age' => $age
 				);
 		}		
 		
