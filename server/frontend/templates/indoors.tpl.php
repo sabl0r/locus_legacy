@@ -6,7 +6,7 @@
 		<title>Locus</title>
 		<base href="<?php echo Functions::getBaseURI(); ?>" />
 		
-		<link rel="stylesheet" href="css/style.css?t=<?php echo time(); ?>" />
+		<link rel="stylesheet" href="frontend/templates/indoors.css?t=<?php echo time(); ?>" />
 		
 		<script src="js/jquery.js"></script>
 		<script src="js/locus.indoors.js"></script>		
@@ -55,14 +55,15 @@
 				?>
 					
 				</div>
+				
+				<div id="footer" class="bar">
+					<a href="http://files.inrain.org/pub/pmap/locus-current.apk">App</a>
+					<a href="http://wiki.inrain.org/28C3/Map">Request?</a>
+				</div>
+				
 			</div>
-
-		</div>
-		
-		<div id="footer" class="bar">
-			<a href="http://files.inrain.org/pub/pmap/locus-current.apk">App</a>
-			<a href="http://wiki.inrain.org/28C3/Map">Request?</a>
-		</div>
+			
+		</div>	
 		
 		<script>
 

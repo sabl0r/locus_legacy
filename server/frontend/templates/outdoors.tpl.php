@@ -6,7 +6,7 @@
 		<title>Locus</title>
 		<base href="<?php echo Functions::getBaseURI(); ?>" />
 
-		<link rel="stylesheet" href="css/style.css" />
+		<link rel="stylesheet" href="frontend/templates/outdoors.css?t=<?php echo time(); ?>" />
 
 		<script src="https://www.google.com/jsapi"></script>
 		<script src="js/jquery.js"></script>
