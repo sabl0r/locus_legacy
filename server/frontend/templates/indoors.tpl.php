@@ -7,6 +7,9 @@
 		<base href="<?php echo Functions::getBaseURI(); ?>" />
 		
 		<link rel="stylesheet" href="css/style.css?t=<?php echo time(); ?>" />
+		
+		<script src="js/jquery.js"></script>
+		<script src="js/locus.indoors.js"></script>		
 	</head>
 	<body>
 		<div id="page">
@@ -21,18 +24,32 @@
 				
 				<?php
 				
+				$locations = array();
+				$empty = array();
 				foreach($pois as $name => $users){
-					echo '<h2 class="poi">'.String::sanitize($name).'</h2>';
 					
 					if(!empty($users)){
+						$locations[] = array('name' => $name, 'users' => $users);
+					} else {
+						$empty[] = array('name' => $name, 'users' => $users);
+					}
+					
+				}
+				
+				foreach(array_merge($locations, $empty) as $l){
+				
+					echo '<h2 class="poi">'.String::sanitize($l['name']).'</h2>';
+					
+					if(!empty($l['users'])){
 						echo '<ul class="poi">';
-						foreach($users as $u){
+						foreach($l['users'] as $u){
 							echo '<li>'.String::sanitize($u['username']).'</li>';
 						}
 						echo '</ul>';
 					} else {
 						echo '<div class="no_users">Nothing to see here.</div>';
 					}
+					
 				}
 				
 				?>
@@ -46,5 +63,11 @@
 			<a href="http://files.inrain.org/pub/pmap/locus-current.apk">App</a>
 			<a href="http://wiki.inrain.org/28C3/Map">Request?</a>
 		</div>
+		
+		<script>
+
+		de.weizenbaron.LocusIndoors.init(60000);
+
+		</script>		
 	</body>
 </html>
