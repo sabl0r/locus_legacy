@@ -24,6 +24,7 @@
 				
 				<?php
 				
+				$pois = Locus::getPOIs();
 				$locations = array();
 				$empty = array();
 				foreach($pois as $name => $users){
@@ -37,8 +38,12 @@
 				}
 				
 				foreach(array_merge($locations, $empty) as $l){
-				
-					echo '<h2 class="poi">'.String::sanitize($l['name']).'</h2>';
+					
+					if($l['name'] == 'outdoors'){
+						echo '<h2 class="poi"><a href="outdoors/">'.String::sanitize($l['name']).'</a></h2>';
+					} else {
+						echo '<h2 class="poi">'.String::sanitize($l['name']).'</h2>';
+					}
 					
 					if(!empty($l['users'])){
 						echo '<ul class="poi">';

@@ -20,11 +20,9 @@ class LocusFrontend {
 		
 		switch($this->type){
 			case self::OUTDOORS:
-				$users = Locus::getFriends();
 				include 'templates/outdoors.tpl.php';
 				break;
 			case self::INDOORS:
-				$pois = Locus::getPOIs();
 				include 'templates/indoors.tpl.php';
 				break;
 		}

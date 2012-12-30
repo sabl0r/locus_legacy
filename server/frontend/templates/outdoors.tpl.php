@@ -32,6 +32,12 @@
 
 		<script>
 
+		<?php
+		
+		$users = Locus::getFriends();
+		
+		?>
+		
 		de.weizenbaron.Locus.init('content', <?php echo json_encode($users); ?>);
 
 		</script>

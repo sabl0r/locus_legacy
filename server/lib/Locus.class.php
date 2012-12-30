@@ -55,7 +55,8 @@ class Locus {
 		$pois = array();
 		while($s->fetch()){
 			$pois[$name] = array();
-		}		
+		}
+		$pois['outdoors'] = array();
 		
 		$conn->close();
 	
@@ -63,10 +64,10 @@ class Locus {
 		foreach($users as $u){
 			
 			if($u['poi'] == null){
-				continue;
+				$pois['outdoors'][] = $u;
+			} else {
+				$pois[$u['poi']][] = $u;
 			}
-			
-			$pois[$u['poi']][] = $u;			
 			
 		}
 		

@@ -106,28 +106,3 @@ div.bar a:first-child {
 #footer a {
 	width: 100px;
 }
-
-#indoors {
-	padding: 60px 0 50px 20px;
-}
-
-/* POIs */
-h2.poi {
-	margin: 0 0 20px 0;
-	font-size: 20px;
-}
-
-ul.poi {
-	margin: 0 0 30px 0;
-	padding: 0;
-	font-size: 16px;
-}
-
-ul.poi li {
-	margin-left: 20px;
-}
-
-div.no_users {
-	margin-bottom: 30px;
-	font-size: 18px;
-}
