@@ -6,7 +6,7 @@
 		<title>Locus</title>
 		<base href="<?php echo Functions::getBaseURI(); ?>" />
 		
-		<link rel="stylesheet" href="css/style.css" />
+		<link rel="stylesheet" href="css/style.css?t=<?php echo time(); ?>" />
 	</head>
 	<body>
 		<div id="page">
