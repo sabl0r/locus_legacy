@@ -14,3 +14,12 @@ Development Environment
 
 To setup your development environment, follow:
 http://developer.android.com/sdk/installing.html
+
+Test
+----
+
+Using the emulator and Eclipse, the device location can be set via the "Emulator
+Control" view.
+
+ADB=/home/noya/.local/share/androidsdk/platform-tools/adb
+$ADB kill-server && sudo $ADB start-server

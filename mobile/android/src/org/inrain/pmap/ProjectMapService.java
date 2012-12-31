@@ -6,14 +6,27 @@
 package org.inrain.pmap;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.apache.http.HttpException;
 import org.apache.http.HttpResponse;
+import org.apache.http.ParseException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -24,8 +37,12 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
+import android.widget.Toast;
 
 public class ProjectMapService extends Service {
     private final static int ONGOING_NOTIFICATION = 1;
@@ -37,6 +54,7 @@ public class ProjectMapService extends Service {
     private int    updateTick;
     
     private LocationManager     locationManager;
+    private WifiManager         wifiManager;
     private NotificationManager notificationManager;
     private Notification        notification;
     
@@ -52,6 +70,7 @@ public class ProjectMapService extends Service {
         notificationManager = (NotificationManager) getSystemService(
             Context.NOTIFICATION_SERVICE
         );
+        wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
     }
 
     @Override
@@ -65,7 +84,7 @@ public class ProjectMapService extends Service {
         user       = settings.getString("user", "");
         updateTick = settings.getInt("updateTick", 300);
         
-        Intent notificationIntent = new Intent(this, ProjectMapActivity.class);
+        Intent notificationIntent = new Intent(this, LocusActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(
             this,
             0,
@@ -85,17 +104,23 @@ public class ProjectMapService extends Service {
         );
         startForeground(ONGOING_NOTIFICATION, notification);
         
-        // DEBUG
-        String locationProvider = LocationManager.GPS_PROVIDER;
-        // RELEASE
-        //String locationProvider = LocationManager.NETWORK_PROVIDER;
+        if (!wifiManager.isWifiEnabled()) {
+            Toast.makeText(this, "To enable indoor-tracking please activate Wifi.", Toast.LENGTH_LONG).show();
+        }
         
-        Location location = locationManager.getLastKnownLocation(
+        // DEBUG
+        //String locationProvider = LocationManager.GPS_PROVIDER;
+        // RELEASE
+        String locationProvider = LocationManager.NETWORK_PROVIDER;
+        
+        /*Location location = locationManager.getLastKnownLocation(
             locationProvider
         );
         if (location != null) {
-            update(location);
-        }
+            update(location, wifiManager.getScanResults());
+        }*/
+        // ^ this will block the ui; don't do this here; onLocationChanged will
+        // be called soon enough
         
         locationManager.requestLocationUpdates(
             locationProvider,
@@ -123,26 +148,83 @@ public class ProjectMapService extends Service {
     private int counter = 0;
     
     private void update(Location location) {
+        update(location, null);
+    }
+    
+    private void update(Location location, List<ScanResult> accessPoints) {
         String msg;
         HttpClient client = new DefaultHttpClient();
-        HttpPost request = new HttpPost();
         HttpResponse response;
+        HttpPost request = new HttpPost();
+        
+        String accessPointsJson = "";
+        if (accessPoints != null) {
+            for (ScanResult ap : accessPoints) {
+                if (accessPointsJson.length() != 0) {
+                    accessPointsJson += ",";
+                }
+                accessPointsJson += String.format(
+                   "{\"id\":\"%s\",\"l\":%s}",
+                   ap.BSSID,
+                   ap.level
+                );
+            }
+            accessPointsJson = "[" + accessPointsJson + "]";
+        }
+       // Log.d("locus", accessPointsJson);
         
         try {
-            URI uri = new URI(
-                String.format(
-                    "%s/api/update/?user=%s&lat=%f&long=%f&accuracy=%f",
-                    serverUrl,
-                    user,
-                    location.getLatitude(),
-                    location.getLongitude(),
-                    location.getAccuracy()
-                )
-            );
-            counter++;
-            ProjectMapActivity.debug(this, counter + " " + uri.toString());
-            request.setURI(uri);
+            
+            // TODO: move somewhere else
+            String url = serverUrl;
+            if (!url.endsWith("/")) {
+                url += "/";
+            }
+            
+            request.setURI(new URI(String.format(
+                "%sapi/location/",
+                url
+            )));
+            
+            
+            ArrayList<BasicNameValuePair> data = new ArrayList<BasicNameValuePair>();
+            //List<BasicNameValuePair> data = Arrays.asList(new BasicNameValuePair[] {
+            data.add(new BasicNameValuePair("username",  user));
+            data.add(new BasicNameValuePair("latitude",  Double.toString(location.getLatitude())));
+            data.add(new BasicNameValuePair("longitude", Double.toString(location.getLongitude())));
+            data.add(new BasicNameValuePair("accuracy",  Double.toString(location.getAccuracy())));
+            data.add(new BasicNameValuePair("provider",  "network"));
+            //});
+            if (accessPoints != null) {
+                data.add(new BasicNameValuePair("accesspoints", accessPointsJson));
+            }
+            request.setEntity(new UrlEncodedFormEntity(data));
+            
+            try {
+                Log.d("locus", request.getURI().toString());
+                Log.d("locus", EntityUtils.toString(request.getEntity()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+//            
+//            URI uri = new URI(
+//                String.format(
+//                    "%s/api/location/?username=%s&latitude=%f&longitude=%f&accuracy=%f&provider=x",
+//                    serverUrl,
+//                    user,
+//                    location.getLatitude(),
+//                    location.getLongitude(),
+//                    location.getAccuracy()
+//                )
+//            );
+//            counter++;
+//            //ProjectMapActivity.debug(this, counter + " " + uri.toString());
+//            request.setURI(uri);
         } catch (URISyntaxException e) {
+            // TODO
+            ProjectMapActivity.debug(this, "fuck application bug!!" + e.toString());
+            return;
+        } catch (UnsupportedEncodingException e) {
             // TODO
             ProjectMapActivity.debug(this, "fuck application bug!!" + e.toString());
     	    return;
@@ -184,6 +266,8 @@ public class ProjectMapService extends Service {
     
     private LocationListener locationListener = new LocationListener() {
         public void onLocationChanged(Location location) {
+            Log.d("locus", "onLocationChanged");
+            
             // record the best location in the update time window (updateTick)
             if (
                 bestLocation == null ||
@@ -191,9 +275,17 @@ public class ProjectMapService extends Service {
             ) {
                 bestLocation = location;
             }
+            
+            // TODO: move somewhere else
+            List<ScanResult> accessPoints = wifiManager.getScanResults();
+            /*if (accessPoints == null) {
+                Log.d("locus", "no access points/wifi off...");
+            } else {
+                Log.d("locus", accessPoints.toString());
+            }*/
 
             if (System.currentTimeMillis() >= nextUpdate) {
-                update(bestLocation);
+                update(bestLocation, accessPoints);
                 bestLocation = null;
             }
         }

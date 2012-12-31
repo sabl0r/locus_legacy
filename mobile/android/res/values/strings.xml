@@ -11,4 +11,12 @@
     <string name="serviceLabel">Service:</string>
     <string name="mapLabel">Map:</string>
     <string name="updateTickLabel">Update Tick [s]</string>
+    <string name="startTracking">Start Tracking</string>
+    <string name="stopTracking">Stop Tracking</string>
+    <string name="tagLocation">Tag Location</string>
+    <string name="settings">Settings</string>
+    <string name="setup">Welcome to locus! Before we start, please set the server URL and choose a user name via Menu >> Settings.</string>
+    <string name="tag">Tag</string>
+    <string name="name">Name</string>
+    <string name="cancel">Cancel</string>
 </resources>

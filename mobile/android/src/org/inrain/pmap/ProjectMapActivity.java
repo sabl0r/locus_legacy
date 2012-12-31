@@ -26,8 +26,8 @@ public class ProjectMapActivity extends Activity {
 	private String user;
 	private int    updateTick;
 	
-    private Button       mapButton;
-	private ToggleButton serviceButton;
+    //private Button       mapButton;
+	//private ToggleButton serviceButton;
 	private TextView     serverText;
 	private TextView     userText;
 	private EditText     updateTickText;
@@ -37,19 +37,21 @@ public class ProjectMapActivity extends Activity {
 		Toast.makeText(ctx, msg, Toast.LENGTH_SHORT).show();
 	}
 	
-	private void setupButtons() {
+	/*private void setupButtons() {
 	    boolean enabled = !serverUrl.equals("") && !user.equals("");
 	    serviceButton.setEnabled(enabled);
 	    mapButton.setEnabled(enabled);
-	}
+	}*/
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
-        mapButton      = (Button)       findViewById(R.id.mapButton);
-        serviceButton  = (ToggleButton) findViewById(R.id.serviceButton);
+        findViewById(R.id.x).requestFocus(); // really don't focus anything...
+        
+        //mapButton      = (Button)       findViewById(R.id.mapButton);
+        //serviceButton  = (ToggleButton) findViewById(R.id.serviceButton);
         serverText     = (TextView)     findViewById(R.id.serverText);
         userText       = (TextView)     findViewById(R.id.userText);
         updateTickText = (EditText)     findViewById(R.id.updateTickText);
@@ -66,13 +68,13 @@ public class ProjectMapActivity extends Activity {
         updateTickText.setText(String.format("%d", updateTick));
         
         saveButton.setOnClickListener(mCorkyListener); // TODO
-        mapButton.setOnClickListener(mapButtonClickListener);
+        /*mapButton.setOnClickListener(mapButtonClickListener);
         serviceButton.setChecked(ProjectMapService.running);
         serviceButton.setOnClickListener(serviceButtonClickListener);
-        setupButtons();
+        setupButtons();*/
     }
     
-    private OnClickListener serviceButtonClickListener = new OnClickListener() {
+    /*private OnClickListener serviceButtonClickListener = new OnClickListener() {
         public void onClick(View view) {
             Intent intent = new Intent(
                 ProjectMapActivity.this,
@@ -80,19 +82,20 @@ public class ProjectMapActivity extends Activity {
             );
             if (serviceButton.isChecked()) {
                 startService(intent);
-                debug(ProjectMapActivity.this, "Starting...");
+                //debug(ProjectMapActivity.this, "Starting...");
             } else {
                 stopService(intent);
-                debug(ProjectMapActivity.this, "Stopping...");
+                //debug(ProjectMapActivity.this, "Stopping...");
             }
         }
     };
     
     private OnClickListener mapButtonClickListener = new OnClickListener() {
         public void onClick(View view) {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(serverUrl)));
+            //startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(serverUrl)));
+            startActivity(new Intent(ProjectMapActivity.this, LocusActivity.class));
         }
-    };
+    };*/
     
     private OnClickListener mCorkyListener = new OnClickListener() { // TODO
         public void onClick(View view) {
@@ -108,7 +111,7 @@ public class ProjectMapActivity extends Activity {
             editor.putInt("updateTick", updateTick);
             editor.commit();
             
-            setupButtons();
+            //setupButtons();
         }
     };
 }
