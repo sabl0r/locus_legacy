@@ -2,3 +2,4 @@ server/config.inc.php
 /server/nbproject/private/
 /server/nbproject
 /server/var/autoload.php
+/server/var/test.php

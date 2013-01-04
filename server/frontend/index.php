@@ -4,4 +4,4 @@ if(!defined('REQUEST_URI')){
 	return;
 }
 
-$frontend = new LocusFrontend();
+$frontend = new LocusFrontend(REQUEST_MODULE == 'outdoors' ? LocusFrontend::OUTDOORS : LocusFrontend::INDOORS);
